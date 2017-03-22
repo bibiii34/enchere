@@ -9,14 +9,32 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Enchere-MAX</title>
     </head>
     <body>
         <h1>Bienvenue sur l'application Enchere-max !</h1>
-        
+
         <form action="Controleur" method="get">
-            <input type="hidden" name="action" value="ajoutProduit">
-            <button type="submit">Ajouter un produit</button>
+            <input type="hidden" name="action" value="produit">
+            <button type="submit">Ajouter-Supprimer produits</button>
         </form>
+        
+      <!--  <form action="Controleur" method="get">
+            <input type="hidden" name="action" value="listerProduits">
+            <button type="submit">Voir les produits</button>
+        </form>-->
+        
+       <!-- <form action="Controleur" method="get">
+            <input type="hidden" name="action" value="listerVente">
+            <button type="submit">Voir les ventes aux encheres</button>
+        </form>-->
+
+        <form action="Controleur" method="get">
+            <input type="hidden" name="action" value="vente">
+            <button type="submit">Créer-Supprimer une vente aux encheres</button>
+        </form>
+        
+        
+
     </body>
 </html>

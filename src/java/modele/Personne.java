@@ -81,17 +81,16 @@ public class Personne {
         this.role = role;
     }
     
-    public ArrayList<Personne> list() {
+    public ArrayList<Personne> listAll() {
         ArrayList<Personne> liste = new ArrayList();
-        
-                try {
+
+        try {
             Class.forName("com.mysql.jdbc.Driver");
             try (java.sql.Connection c = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "root", "")) {
                 PreparedStatement s = c.prepareStatement("SELECT * FROM personne");
                 ResultSet r = s.executeQuery();
-                
-               
-                while(r.next()){
+
+                while (r.next()) {
                     Personne p = new Personne();
                     p.setIdp(r.getInt("idP"));
                     p.setNom(r.getString("nom"));
@@ -101,12 +100,11 @@ public class Personne {
                     p.setRole(r.getInt("role"));
                     liste.add(p);
                 }
-                
+
                 s.close();
-                
+
             }
-            
-            
+
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Produit.class.getName()).log(Level.SEVERE, null, ex);
             System.out.print("erreur de chargement de la lib");
@@ -117,4 +115,139 @@ public class Personne {
         return liste;
     }
     
+    public ArrayList<Personne> listAdmin() {
+        ArrayList<Personne> liste = new ArrayList();
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            try (java.sql.Connection c = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "root", "")) {
+                PreparedStatement s = c.prepareStatement("SELECT * FROM personne where role = 0");
+                ResultSet r = s.executeQuery();
+
+                while (r.next()) {
+                    Personne p = new Personne();
+                    p.setIdp(r.getInt("idP"));
+                    p.setNom(r.getString("nom"));
+                    p.setPrenom(r.getString("prenom"));
+                    p.setEmail(r.getString("email"));
+                    p.setLogin(r.getString("login"));
+                    p.setRole(r.getInt("role"));
+                    liste.add(p);
+                }
+
+                s.close();
+
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Produit.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.print("erreur de chargement de la lib");
+        } catch (SQLException ex) {
+            Logger.getLogger(Produit.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.print("erreur sql");
+        }
+        return liste;
+    }
+    
+     public ArrayList<Personne> listResponsable() {
+        ArrayList<Personne> liste = new ArrayList();
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            try (java.sql.Connection c = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "root", "")) {
+                PreparedStatement s = c.prepareStatement("SELECT * FROM personne where role = 1");
+                ResultSet r = s.executeQuery();
+
+                while (r.next()) {
+                    Personne p = new Personne();
+                    p.setIdp(r.getInt("idP"));
+                    p.setNom(r.getString("nom"));
+                    p.setPrenom(r.getString("prenom"));
+                    p.setEmail(r.getString("email"));
+                    p.setLogin(r.getString("login"));
+                    p.setRole(r.getInt("role"));
+                    liste.add(p);
+                }
+
+                s.close();
+
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Produit.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.print("erreur de chargement de la lib");
+        } catch (SQLException ex) {
+            Logger.getLogger(Produit.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.print("erreur sql");
+        }
+        return liste;
+    }
+    
+     public ArrayList<Personne> listProprietaire() {
+        ArrayList<Personne> liste = new ArrayList();
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            try (java.sql.Connection c = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "root", "")) {
+                PreparedStatement s = c.prepareStatement("SELECT * FROM personne where role = 2");
+                ResultSet r = s.executeQuery();
+
+                while (r.next()) {
+                    Personne p = new Personne();
+                    p.setIdp(r.getInt("idP"));
+                    p.setNom(r.getString("nom"));
+                    p.setPrenom(r.getString("prenom"));
+                    p.setEmail(r.getString("email"));
+                    p.setLogin(r.getString("login"));
+                    p.setRole(r.getInt("role"));
+                    liste.add(p);
+                }
+
+                s.close();
+
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Produit.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.print("erreur de chargement de la lib");
+        } catch (SQLException ex) {
+            Logger.getLogger(Produit.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.print("erreur sql");
+        }
+        return liste;
+    }
+    
+     public ArrayList<Personne> listParticipant() {
+        ArrayList<Personne> liste = new ArrayList();
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            try (java.sql.Connection c = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "root", "")) {
+                PreparedStatement s = c.prepareStatement("SELECT * FROM personne where role = 3");
+                ResultSet r = s.executeQuery();
+
+                while (r.next()) {
+                    Personne p = new Personne();
+                    p.setIdp(r.getInt("idP"));
+                    p.setNom(r.getString("nom"));
+                    p.setPrenom(r.getString("prenom"));
+                    p.setEmail(r.getString("email"));
+                    p.setLogin(r.getString("login"));
+                    p.setRole(r.getInt("role"));
+                    liste.add(p);
+                }
+
+                s.close();
+
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Produit.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.print("erreur de chargement de la lib");
+        } catch (SQLException ex) {
+            Logger.getLogger(Produit.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.print("erreur sql");
+        }
+        return liste;
+    }
 }
