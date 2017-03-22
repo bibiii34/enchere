@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import modele.Personne;
 import modele.Produit;
 import modele.Vendre;
@@ -54,12 +55,18 @@ public class Controleur extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //processRequest(request, response);
-
+        HttpSession session = request.getSession(true);
         String action = request.getParameter("action");
 
         //PAS D'ACTION
         if (action == null) {
-            this.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+            if (session.getAttribute("user") == null) {
+                this.getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
+            }
+            else {
+                this.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+            }
+
         } //AJOUT PRODUIT
         else if (action.equals("produit")) {
             Produit pr = new Produit();
@@ -83,12 +90,10 @@ public class Controleur extends HttpServlet {
             request.setAttribute("listePersonne", listePersonne);
             request.setAttribute("listeVente", listeVente);
             this.getServletContext().getRequestDispatcher("/vente.jsp").forward(request, response);
-        }
-        
-         else if (action.equals("venteProduits")) {
+        } else if (action.equals("venteProduits")) {
             Produit p = new Produit();
             ArrayList<Produit> produits = new ArrayList(p.produitsVente(request.getParameter("idV")));
-            
+
             request.setAttribute("listeProduit", produits);
             this.getServletContext().getRequestDispatcher("/produitVente.jsp").forward(request, response);
         }
@@ -107,10 +112,23 @@ public class Controleur extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //processRequest(request, response);
+        HttpSession session = request.getSession(true);
         String action = request.getParameter("action");
 
         if (action == null) {
 
+        } else if (action.equals("login")) {
+            Personne user = new Personne();
+            user.login(request.getParameter("login"),request.getParameter("mdp"));
+            
+            if (user.getLogin()== null) {
+                String message = "erreur d'identification";
+                request.setAttribute("message", message);
+                this.getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
+            } else {
+                session.setAttribute("user", user);
+                this.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+            }
         } //AJOUT PRODUIT
         else if (action.equals("ajoutProduit")) {
             Vente v = new Vente();

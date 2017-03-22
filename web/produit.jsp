@@ -14,6 +14,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
+        <link rel="stylesheet" type="text/css"  href="Public/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="fonts/font-awesome/css/font-awesome.css">
     </head>
     <body>
 
@@ -42,7 +44,7 @@
         <h1>Liste des produits</h1>
         <form action="Controleur" method="post" id="supprimer">
             <input type="hidden" name="action" value="supprimerProduit">
-            <table>
+            <table class="table table-bordered">
                 <tr>
                     <th>SELECTIONNER</th>
                     <th>ID</th>

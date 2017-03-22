@@ -4,6 +4,7 @@
     Author     : Bryan
 --%>
 
+<%@page import="modele.Personne"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,6 +14,11 @@
     </head>
     <body>
         <h1>Bienvenue sur l'application Enchere-max !</h1>
+        <%
+            
+        out.print(((Personne)session.getAttribute("user")).getNom());
+        
+        %>
 
         <form action="Controleur" method="get">
             <input type="hidden" name="action" value="produit">

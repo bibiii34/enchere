@@ -81,6 +81,43 @@ public class Personne {
         this.role = role;
     }
     
+    public void login(String login, String mdp) {
+        //Personne user = new Personne();
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            try (java.sql.Connection c = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "root", "")) {
+                PreparedStatement s = c.prepareStatement("SELECT * FROM personne where login = ? and mdp = ?");
+                
+                
+                s.setString(1,login);
+                s.setString(2,mdp);
+                ResultSet r = s.executeQuery();
+                 
+                while (r.next()) {
+                    Personne p = new Personne();
+                    this.setIdp(r.getInt("idP"));
+                    this.setNom(r.getString("nom"));
+                    this.setPrenom(r.getString("prenom"));
+                    this.setEmail(r.getString("email"));
+                    this.setLogin(r.getString("login"));
+                    this.setRole(r.getInt("role"));
+                }
+
+                s.close();
+
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Produit.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.print("erreur de chargement de la lib");
+        } catch (SQLException ex) {
+            Logger.getLogger(Produit.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.print("erreur sql");
+        }
+        
+    }
+    
     public ArrayList<Personne> listAll() {
         ArrayList<Personne> liste = new ArrayList();
 
@@ -250,4 +287,5 @@ public class Personne {
         }
         return liste;
     }
+     
 }
