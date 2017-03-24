@@ -58,44 +58,64 @@ public class Controleur extends HttpServlet {
         HttpSession session = request.getSession(true);
         String action = request.getParameter("action");
 
-        //PAS D'ACTION
-        if (action == null) {
-            if (session.getAttribute("user") == null) {
-                this.getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
-            }
-            else {
+        //Si l'utilisateur n'est pas connecté
+        if (session.getAttribute("user") == null) {
+            this.getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
+        } else {
+            //PAS D'ACTION
+            if (action == null) {
                 this.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+            } 
+            //ACTION=PRODUIT
+            else if (action.equals("produit")) {
+                //AJOUT PRODUIT ADMIN
+                if (((Personne) session.getAttribute("user")).getRole() == 0) {
+                    Produit pr = new Produit();
+                    Personne p = new Personne();
+                    Vente v = new Vente();
+                    ArrayList<Personne> listePersonne = new ArrayList(p.listProprietaire());
+                    ArrayList<Produit> listeProduit = new ArrayList(pr.list());
+                    ArrayList<Vente> listeVente = new ArrayList(v.listDate());
+
+                    request.setAttribute("listePersonne", listePersonne);
+                    request.setAttribute("listeProduit", listeProduit);
+                    request.setAttribute("listeVente", listeVente);
+                    this.getServletContext().getRequestDispatcher("/Admin/produit.jsp").forward(request, response);
+                } //LISTE PRODUIT USER
+                else {
+                    Produit pr = new Produit();
+                    ArrayList<Produit> listeProduit = new ArrayList(pr.list());
+
+                    request.setAttribute("listeProduit", listeProduit);
+                    this.getServletContext().getRequestDispatcher("/produit.jsp").forward(request, response);
+                }
+            } //ACTION=VENTE
+            else if (action.equals("vente")) {
+                //AJOUT VENTE ADMIN
+                if (((Personne) session.getAttribute("user")).getRole() == 0) {
+                    Personne p = new Personne();
+                    Vente v = new Vente();
+                    ArrayList<Personne> listePersonne = new ArrayList(p.listResponsable());
+                    ArrayList<Vente> listeVente = new ArrayList(v.listAll());
+
+                    request.setAttribute("listePersonne", listePersonne);
+                    request.setAttribute("listeVente", listeVente);
+                    this.getServletContext().getRequestDispatcher("/Admin/vente.jsp").forward(request, response);
+                } //LISTE VENTE USER
+                else {
+                    Vente v = new Vente();
+                    ArrayList<Vente> listeVente = new ArrayList(v.listAll());
+                    request.setAttribute("listeVente", listeVente);
+                    this.getServletContext().getRequestDispatcher("/vente.jsp").forward(request, response);
+                }
+
+            } else if (action.equals("venteProduits")) {
+                Produit p = new Produit();
+                ArrayList<Produit> produits = new ArrayList(p.produitsVente(request.getParameter("idV")));
+
+                request.setAttribute("listeProduit", produits);
+                this.getServletContext().getRequestDispatcher("/produitVente.jsp").forward(request, response);
             }
-
-        } //AJOUT PRODUIT
-        else if (action.equals("produit")) {
-            Produit pr = new Produit();
-            Personne p = new Personne();
-            Vente v = new Vente();
-            ArrayList<Personne> listePersonne = new ArrayList(p.listProprietaire());
-            ArrayList<Produit> listeProduit = new ArrayList(pr.list());
-            ArrayList<Vente> listeVente = new ArrayList(v.listDate());
-
-            request.setAttribute("listePersonne", listePersonne);
-            request.setAttribute("listeProduit", listeProduit);
-            request.setAttribute("listeVente", listeVente);
-            this.getServletContext().getRequestDispatcher("/produit.jsp").forward(request, response);
-        } //AJOUT VENTE
-        else if (action.equals("vente")) {
-            Personne p = new Personne();
-            Vente v = new Vente();
-            ArrayList<Personne> listePersonne = new ArrayList(p.listResponsable());
-            ArrayList<Vente> listeVente = new ArrayList(v.listAll());
-
-            request.setAttribute("listePersonne", listePersonne);
-            request.setAttribute("listeVente", listeVente);
-            this.getServletContext().getRequestDispatcher("/vente.jsp").forward(request, response);
-        } else if (action.equals("venteProduits")) {
-            Produit p = new Produit();
-            ArrayList<Produit> produits = new ArrayList(p.produitsVente(request.getParameter("idV")));
-
-            request.setAttribute("listeProduit", produits);
-            this.getServletContext().getRequestDispatcher("/produitVente.jsp").forward(request, response);
         }
 
     }
@@ -116,20 +136,32 @@ public class Controleur extends HttpServlet {
         String action = request.getParameter("action");
 
         if (action == null) {
-
-        } else if (action.equals("login")) {
+           String message = "Une erreur s'est produite !";
+                request.setAttribute("message", message);
+                this.getServletContext().getRequestDispatcher("/informations.jsp").forward(request, response); 
+        } 
+        
+        //ACTION = LOGIN
+        else if (action.equals("login")) {
             Personne user = new Personne();
-            user.login(request.getParameter("login"),request.getParameter("mdp"));
-            
-            if (user.getLogin()== null) {
-                String message = "erreur d'identification";
+            user.login(request.getParameter("login"), request.getParameter("mdp"));
+
+            if (user.getLogin() == null) {
+                String message = "Login ou mot de passe incorrect !";
                 request.setAttribute("message", message);
                 this.getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
             } else {
                 session.setAttribute("user", user);
-                this.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+                response.sendRedirect("Controleur");
             }
-        } //AJOUT PRODUIT
+        } 
+        //ACTION = LOGOUT
+        else if (action.equals("logout")) {          
+            session.removeAttribute("user");
+             response.sendRedirect("Controleur");
+        } 
+
+        //AJOUT PRODUIT
         else if (action.equals("ajoutProduit")) {
             Vente v = new Vente();
             Produit pr = new Produit();
@@ -148,8 +180,9 @@ public class Controleur extends HttpServlet {
             request.setAttribute("listeVente", listeVente);
             request.setAttribute("listePersonne", listePersonne);
             request.setAttribute("listeProduit", listeProduit);
-            this.getServletContext().getRequestDispatcher("/produit.jsp").forward(request, response);
-        } //SUPPRIMER PRODUIT
+            this.getServletContext().getRequestDispatcher("/Admin/produit.jsp").forward(request, response);
+        } 
+        //SUPPRIMER PRODUIT
         else if (action.equals("supprimerProduit")) {
             Vente v = new Vente();
             Produit pr = new Produit();
@@ -164,8 +197,9 @@ public class Controleur extends HttpServlet {
             request.setAttribute("listeVente", listeVente);
             request.setAttribute("listePersonne", listePersonne);
             request.setAttribute("listeProduit", listeProduit);
-            this.getServletContext().getRequestDispatcher("/produit.jsp").forward(request, response);
-        } //AJOUT VENTE
+            this.getServletContext().getRequestDispatcher("/Admin/produit.jsp").forward(request, response);
+        } 
+        //AJOUT VENTE
         else if (action.equals("ajoutVente")) {
 
             Vente v = new Vente();
@@ -184,12 +218,11 @@ public class Controleur extends HttpServlet {
 
             request.setAttribute("listePersonne", listePersonne);
             request.setAttribute("listeVente", listeVente);
-            this.getServletContext().getRequestDispatcher("/vente.jsp").forward(request, response);
-        } //SUPPRIMER VENTE
+            this.getServletContext().getRequestDispatcher("/Admin/vente.jsp").forward(request, response);
+        } 
+        //SUPPRIMER VENTE
         else if (action.equals("supprimerVente")) {
-
             Vente v = new Vente();
-
             v.remove(request.getParameterValues("id"));
 
             Personne p = new Personne();
@@ -198,8 +231,9 @@ public class Controleur extends HttpServlet {
 
             request.setAttribute("listePersonne", listePersonne);
             request.setAttribute("listeVente", listeVente);
-            this.getServletContext().getRequestDispatcher("/vente.jsp").forward(request, response);
-        } //AJOUT SUPPRIMER PRODUIT A VENDRE
+            this.getServletContext().getRequestDispatcher("/Admin/vente.jsp").forward(request, response);
+        } 
+        //AJOUT SUPPRIMER PRODUIT A VENDRE
         else if (action.equals("vendre")) {
             Vendre ve = new Vendre();
             Produit pr = new Produit();
@@ -215,7 +249,7 @@ public class Controleur extends HttpServlet {
                 request.setAttribute("listePersonne", listePersonne);
                 request.setAttribute("listeVente", listeVente);
                 request.setAttribute("listeProduit", listeProduit);
-                this.getServletContext().getRequestDispatcher("/produit.jsp").forward(request, response);
+                this.getServletContext().getRequestDispatcher("/Admin/produit.jsp").forward(request, response);
 
             } else {
 
@@ -230,7 +264,7 @@ public class Controleur extends HttpServlet {
                 request.setAttribute("listePersonne", listePersonne);
                 request.setAttribute("listeVente", listeVente);
                 request.setAttribute("listeProduit", listeProduit);
-                this.getServletContext().getRequestDispatcher("/produit.jsp").forward(request, response);
+                this.getServletContext().getRequestDispatcher("/Admin/produit.jsp").forward(request, response);
             }
         }
 
