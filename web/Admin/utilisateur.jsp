@@ -71,64 +71,68 @@
                     <div class="container">
                         <div class="row">
                             <form action="Controleur" method="post" >
-                                <input type="hidden" name="action" value="ajoutVente">
-                                <div class="col-md-3">
+                                <input type="hidden" name="action" value="ajoutUtilisateur">
+                                <div class="col-md-2">
                                     <div class="form-group">
-                                        <label> Nom de la vente :</label><input type="text" name="nom" class="form-control">
+                                        <label> Nom :</label><input type="text" name="nom" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label> Date :</label><input type="text" name="date" class="form-control">
+                                        <label> Prenom :</label><input type="text" name="prenom" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label> Heure de début :</label><input type="text" name="heureD" class="form-control">
+                                        <label> Email :</label><input type="text" name="email" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-2">                                 
                                     <div class="form-group">
-                                        <label> Heure de fin :</label><input type="text" name="heureF" class="form-control">
+                                        <label> Login :</label><input type="text" name="login" class="form-control">
                                     </div>
                                 </div> 
-                                <div class="col-md-3">
-                                    <label> Responsable :</label><br>
-                                    <select name="responsable" class="form-control">
-                                        <%
-                                            ArrayList<Personne> listePersonne = (ArrayList) request.getAttribute("listePersonne");
-
-                                            for (Personne p : listePersonne) {
-                                                out.print("<option value=" + p.getIdp() + ">" + p.getNom() + "</option>");
-
-                                            }
-                                        %>
-                                    </select>
+                                <div class="col-md-2">                                 
+                                    <div class="form-group">
+                                        <label> Mot de passe :</label><input type="text" name="mdp" class="form-control">
+                                    </div>
+                                </div> 
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label> Role :</label><br>
+                                        <select name="role" class="form-control">
+                                            <option value="0">administrateur</option>
+                                            <option value="1">responsable</option>
+                                            <option value="2">proprietaire</option>
+                                            <option value="3">participant</option>
+                                        </select>
+                                    </div>
                                 </div>
 
                         </div>
-                                    <input type="submit" value="Ajouter"  class="btn tf-btn btn-default orange">
+                        <input type="submit" value="Ajouter"  class="btn tf-btn btn-default orange">
                         </form>
                         <br><br>           
-                        <h1>liste des ventes aux encheres</h1>
+                        <h1>liste des utilisateurs</h1>
                         <form action="Controleur" method="post" id="supprimer">
-                            <input type="hidden" name="action" value="supprimerVente">
+                            <input type="hidden" name="action" value="supprimerUtilisateur">
                             <table class="table table-bordered">
 
                                 <tr>
                                     <th>SELECTION</th>
                                     <th>ID</th>
                                     <th>NOM</th>
-                                    <th>DATE</th>
-                                    <th>HEURE DE DEBUT</th>
-                                    <th>HEURE DE FIN</th>
-                                    <th>RESPONSABLE</th>
+                                    <th>PRENOM</th>
+                                    <th>EMAIL</th>
+                                    <th>LOGIN</th>
+                                    <th>MOT DE PASSE</th>
+                                    <th>ROLE</th>
                                 </tr>
                                 <%
-                                    ArrayList<Vente> listeVente = (ArrayList) request.getAttribute("listeVente");
+                                    ArrayList<Personne> listePersonne = (ArrayList) request.getAttribute("listePersonne");
 
-                                    for (Vente v : listeVente) {
-                                        out.print("<tr><td><input type='checkbox' name='id' value='" + v.getIdV() + "'></td></form><td>" + v.getIdV() + "</td><td>" + v.getNom() + "</td><td>" + v.getDate() + "</td><td>" + v.getHeureD() + "</td><td>" + v.getHeureF() + "</td><td>" + v.getPrenomP() + " " + v.getNomP() + "</td><form action='Controleur' method='get'><input type='hidden' name='action' value='venteProduits'><input type='hidden' name='idV' value='" + v.getIdV() + "'><td><input type='submit' class='orange btn tf-btn btn-default' value='Voir Produits'></form></td></tr>");
+                                    for (Personne p : listePersonne) {
+                                        out.print("<tr><td><input type='checkbox' name='id' value='" + p.getIdp()+ "'></td></form><td>" + p.getIdp()+ "</td><td>" + p.getNom() + "</td><td>" + p.getPrenom()+ "</td><td>" + p.getEmail() + "</td><td>" + p.getLogin() + "</td><td>" + p.getMdp()+ "</td><td>" + p.getRole()+ "</td></tr>");
 
                                     }
                                 %>

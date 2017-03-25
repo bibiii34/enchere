@@ -37,6 +37,13 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
+                        <%
+                            if(((Personne)session.getAttribute("user")).getRole()==0){
+                                String s = "<li><form action='Controleur' method='get'><input type='hidden' name='action' value='utilisateur'>"
+                                + " <button type='submit'  class='btn btn-default btn-marin'>utilisateur</button></form></li>";
+                                out.print(s);
+                            }
+                        %>
                         <li>
                             <form action="Controleur" method="get">
                                 <input type="hidden" name="action" value="produit">

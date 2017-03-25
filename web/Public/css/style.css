@@ -140,7 +140,7 @@ ul, ol{
 
 .content{
     position: relative;
-    padding: 20% 0 0;
+    padding: 15% 0 0;
 }
 
 .color{
@@ -583,4 +583,20 @@ nav#footer p{
     color: white;
     padding: 10px 40px;
     border: 0;
+}
+
+.table{
+    color: white;
+}
+
+table option{
+    background-color: orange;
+
+}
+table select {
+    background-color: orange;
+}
+
+table th {
+    text-align: center;
 }

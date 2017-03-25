@@ -10,9 +10,7 @@
         <servlet-name>Controleur</servlet-name>
         <url-pattern>/controleur</url-pattern>
         <url-pattern>/Controleur</url-pattern>
-
-        
-        
+        <url-pattern>/index</url-pattern>     
     </servlet-mapping>
     <session-config>
         <session-timeout>

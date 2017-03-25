@@ -74,17 +74,17 @@
                                 <input type="hidden" name="action" value="ajoutProduit">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label> nom :</label><input type="text" name="nom" class="form-control">
+                                        <label> Nom :</label><input type="text" name="nom" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label> prix :</label><input type="text" name="prix" class="form-control">
+                                        <label> Prix :</label><input type="text" name="prix" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label> propriétaire :</label>
+                                        <label> Propriétaire :</label>
                                         <select name="proprietaire" class="form-control">
                                             <%
                                                 ArrayList<Personne> listePersonne = (ArrayList) request.getAttribute("listePersonne");
@@ -98,16 +98,51 @@
                                 <input type="submit" value="Ajouter"  class="btn tf-btn btn-default orange">
                             </form>
                         </div>
-                                        
-                                        
-                    
-                    
-                    
-                    
-                    
+                        <h1>Liste des produits</h1>
+                        <form action="Controleur" method="post" id="supprimer">
+                            <input type="hidden" name="action" value="supprimerProduit">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>SELECTIONNER</th>
+                                    <th>ID</th>
+                                    <th>NOM</th>
+                                    <th>PRIX</th>
+                                    <th>PHOTO</th>
+                                    <th>PROPRIETAIRE</th>
+                                    <th>VENTE</th>
+                                    <th>CHOIX VENTE</th>
+                                </tr>
+                                <%
+                                    ArrayList<Produit> listeProduit = (ArrayList) request.getAttribute("listeProduit");
+                                    ArrayList<Vente> listeVente = (ArrayList) request.getAttribute("listeVente");
+
+                                    for (Produit p : listeProduit) {
+                                        out.print("<tr><td><input type='checkbox' name='id' value='" + p.getId() + "'></td></form><td>" + p.getId() + "</td><td>" + p.getNom() + "</td><td>" + p.getPrix() + "</td><td>" + p.getPhoto() + "</td><td>" + p.getPrenomP() + " " + p.getNomP() + "</td><td>" + p.getNomV() + "</td><td><form action='Controleur' method='post'><input type='hidden' name='action' value='vendre'><input type='hidden' name='idP' value='" + p.getId() + "'><select name='idV'><option name='idV' value='null'>aucune</option>");
+
+                                        for (Vente v : listeVente) {
+                                            out.print("<option value='" + v.getIdV() + "'>" + v.getNom() + "</option>");
+                                        }
+
+                                        out.print("</select ></td><td><input type='submit' value='Vendre' class='orange btn tf-btn btn-default'></form></td></tr>");
+
+                                    }
+                                %>
+                                <tr>
+                                    <td>
+                                        <button type="submit" id="supprimer" class='orange btn btn-default'>SUPPRIMER</button>
+                                    </td>
+
+                                </tr>
+
+                            </table>
+
+                            <form action="Controleur">
+                                <input type="submit" value="retour au menu" class="btn btn-default btn-marin">
+                            </form>          
+
                     </div>
                 </div>
-            <</div>
+                </div>
 
 
             <nav id="footer">
@@ -125,57 +160,7 @@
                     </div>
                 </div>
             </nav>
-            <!--
-                    <h1>Liste des produits</h1>
-                    <form action="Controleur" method="post" id="supprimer">
-                        <input type="hidden" name="action" value="supprimerProduit">
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>SELECTIONNER</th>
-                                <th>ID</th>
-                                <th>NOM</th>
-                                <th>PRIX</th>
-                                <th>PHOTO</th>
-                                <th>PROPRIETAIRE</th>
-                                <th>VENTE</th>
-                                <th>CHOIX VENTE</th>
-                            </tr>
-            <%
-                ArrayList<Produit> listeProduit = (ArrayList) request.getAttribute("listeProduit");
-                ArrayList<Vente> listeVente = (ArrayList) request.getAttribute("listeVente");
-
-                for (Produit p : listeProduit) {
-                    out.print("<tr><td><input type='checkbox' name='id' value='" + p.getId() + "'></td></form><td>" + p.getId() + "</td><td>" + p.getNom() + "</td><td>" + p.getPrix() + "</td><td>" + p.getPhoto() + "</td><td>" + p.getPrenomP() + " " + p.getNomP() + "</td><td>" + p.getNomV() + "</td><td><form action='Controleur' method='post'><input type='hidden' name='action' value='vendre'><input type='hidden' name='idP' value='" + p.getId() + "'><select name='idV'><option name='idV' value='null'>aucune</option>");
-
-                    for (Vente v : listeVente) {
-                        out.print("<option value='" + v.getIdV() + "'>" + v.getNom() + "</option>");
-                    }
-
-                    out.print("</select></td><td><input type='submit' value='attribuer'></form></td></tr>");
-
-                }
-            %>
-            <tr>
-                <td>
-                    <button type="submit" id="supprimer">SUPPRIMER</button>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-    
-    
-                <td>
-    
-                </td>
-    
-            </tr>
-    
-        </table>
-    
-        <form action="Controlleur">
-            <input type="submit" value="retour au menu">
-        </form>-->
+  
+  
     </body>
 </html>

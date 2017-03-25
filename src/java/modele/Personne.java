@@ -17,6 +17,7 @@ import java.util.logging.Logger;
  * @author Bryan
  */
 public class Personne {
+
     private int idp;
     private String nom;
     private String prenom;
@@ -80,7 +81,57 @@ public class Personne {
     public void setRole(int role) {
         this.role = role;
     }
-    
+
+    public void save() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            try (java.sql.Connection c = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "root", "")) {
+                PreparedStatement s = c.prepareStatement("INSERT INTO `personne` (`idp`, `nom`, `prenom`, `email`, `login`, `mdp`, `role`) VALUES (NULL, ?, ?, ?, ?, ?, ?);");
+
+                //String sql = "INSERT INTO `produit` (`id`, `nom`, `photo`, `prixInitial`, `idP`) VALUES (NULL, '"+this.getNom()+"', 'lien', '"+this.getPrix()+"', '1');";
+                s.setString(1, this.getNom());
+                s.setString(2, this.getPrenom());
+                s.setString(3, this.getEmail());
+                s.setString(4, this.getLogin());
+                s.setString(5, this.getMdp());
+                s.setInt(6, this.getRole());
+                s.executeUpdate();
+                s.close();
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Produit.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.print("erreur de chargement de la lib");
+        } catch (SQLException ex) {
+            Logger.getLogger(Produit.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.print("erreur sql");
+        }
+    }
+
+    public void remove(String[] id) {
+        if (id.length > 0) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                try (java.sql.Connection c = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "root", "")) {
+                    PreparedStatement s = c.prepareStatement("DELETE FROM `personne` WHERE idp = ?");
+
+                    for (int i = 0; i < id.length; i++) {
+                        s.setString(1, id[i]);
+                        s.executeUpdate();
+                    }
+                    s.close();
+                }
+
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Produit.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.print("erreur de chargement de la lib");
+            } catch (SQLException ex) {
+                Logger.getLogger(Produit.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.print("erreur sql");
+            }
+        }
+    }
+
     public void login(String login, String mdp) {
         //Personne user = new Personne();
 
@@ -88,12 +139,11 @@ public class Personne {
             Class.forName("com.mysql.jdbc.Driver");
             try (java.sql.Connection c = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "root", "")) {
                 PreparedStatement s = c.prepareStatement("SELECT * FROM personne where login = ? and mdp = ?");
-                
-                
-                s.setString(1,login);
-                s.setString(2,mdp);
+
+                s.setString(1, login);
+                s.setString(2, mdp);
                 ResultSet r = s.executeQuery();
-                 
+
                 while (r.next()) {
                     Personne p = new Personne();
                     this.setIdp(r.getInt("idP"));
@@ -115,9 +165,9 @@ public class Personne {
             Logger.getLogger(Produit.class.getName()).log(Level.SEVERE, null, ex);
             System.out.print("erreur sql");
         }
-        
+
     }
-    
+
     public ArrayList<Personne> listAll() {
         ArrayList<Personne> liste = new ArrayList();
 
@@ -133,6 +183,7 @@ public class Personne {
                     p.setNom(r.getString("nom"));
                     p.setPrenom(r.getString("prenom"));
                     p.setEmail(r.getString("email"));
+                    p.setMdp(r.getString("mdp"));
                     p.setLogin(r.getString("login"));
                     p.setRole(r.getInt("role"));
                     liste.add(p);
@@ -151,7 +202,7 @@ public class Personne {
         }
         return liste;
     }
-    
+
     public ArrayList<Personne> listAdmin() {
         ArrayList<Personne> liste = new ArrayList();
 
@@ -185,8 +236,8 @@ public class Personne {
         }
         return liste;
     }
-    
-     public ArrayList<Personne> listResponsable() {
+
+    public ArrayList<Personne> listResponsable() {
         ArrayList<Personne> liste = new ArrayList();
 
         try {
@@ -219,8 +270,8 @@ public class Personne {
         }
         return liste;
     }
-    
-     public ArrayList<Personne> listProprietaire() {
+
+    public ArrayList<Personne> listProprietaire() {
         ArrayList<Personne> liste = new ArrayList();
 
         try {
@@ -253,8 +304,8 @@ public class Personne {
         }
         return liste;
     }
-    
-     public ArrayList<Personne> listParticipant() {
+
+    public ArrayList<Personne> listParticipant() {
         ArrayList<Personne> liste = new ArrayList();
 
         try {
@@ -287,5 +338,5 @@ public class Personne {
         }
         return liste;
     }
-     
+
 }
